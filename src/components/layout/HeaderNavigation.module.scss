@@ -1,0 +1,47 @@
+@use './variables';
+
+.navigation > p {
+
+}
+
+.navigation {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 40px;
+  height: 100%;
+
+  > p {
+    text-align: center;
+    padding: 0 15px;
+    &:not(.admin-button){
+      height: inherit;
+      font-size: 30px;
+      line-height: variables.$header-height;
+    }
+    font-weight: 600;
+    &:hover {
+      color: darken(white, 12%);
+      cursor: pointer;
+    }
+  }
+}
+
+.admin-button {
+  font-size: 20px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+
+  padding: 10px 16px;
+  border-radius: 15px;
+
+  background-color: hsl(0, 100%, 30%);
+
+  box-shadow: 0 0 12px -6px #000;
+  margin-right: 20px;
+
+  &:hover {
+    background-color: hsl(0, 100%, 35%);
+  }
+}

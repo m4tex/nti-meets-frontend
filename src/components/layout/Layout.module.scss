@@ -1,0 +1,38 @@
+@use './variables';
+
+.header{
+  position: sticky;
+  top: 0;
+  display: flex;
+
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100vw;
+  height: variables.$header-height;
+
+  background-color: #6a0000;
+  color: white;
+
+  z-index: 100;
+}
+
+
+.logo {
+  margin-left: 40px;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.main {
+  position: relative;
+  min-height: calc(100vh - #{variables.$header-height} - #{variables.$footer-height});
+}
+
+.footer {
+  position: relative;
+  bottom: 0;
+  text-align: center;
+  margin-bottom: 15px;
+}
