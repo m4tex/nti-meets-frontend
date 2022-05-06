@@ -2,11 +2,13 @@ import React, {ReactNode} from 'react';
 import {useState} from "react";
 
 const ctxInit = {
-    isLoggedIn: true,
-    isAdmin: true,
+    isLoggedIn: false,
+    isAdmin: false,
     favorites: [],
     logIn: () => {},
-    logOut: () => {},
+    logOut: () => {
+        console.log('logging in');
+    },
     addFavorite: (id:string|null) => {},
     removeFavorite: (id:string|null) => {},
 }

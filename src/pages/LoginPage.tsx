@@ -2,8 +2,12 @@ import styled from "styled-components";
 import InputField from "../components/UI/InputField";
 import Button from "../components/UI/Button";
 import SlimContentCard from "../components/UI/SlimContentCard";
+import {GlobalContext} from "../store/GlobalContextProvider";
 import LinkAnchor from "../components/UI/LinkAnchor";
 import StyledHR from "../components/UI/StyledHR";
+import {FormEvent, useContext, useState} from "react";
+import MessageCard from "../components/UI/MessageCard";
+import axios from "axios";
 
 const StyledCard = styled(SlimContentCard)`
   text-align: center;
@@ -29,12 +33,38 @@ const StyledCard = styled(SlimContentCard)`
 `
 
 function LoginPage() {
+    const globalCtx = useContext(GlobalContext);
+    const [message, setMessage] = useState('');
+
+    function handleLogin(event: FormEvent) {
+        event.preventDefault();
+        const form = event.target as HTMLFormElement;
+        const usernameInput = form.elements[0] as HTMLInputElement;
+        const passwordInput = form.elements[1] as HTMLInputElement;
+
+        axios.post('http://localhost:8000/logga-in', {
+            username: usernameInput.value,
+            password: passwordInput.value,
+        }).then(res => {
+            if (res.status === 201) {
+                globalCtx.logIn();
+            }
+            if(res.data.hasOwnProperty("err")){
+                setMessage(res.data.err);
+            }
+            else {
+                console.error('Unhandled exception in login response');
+            }
+        });
+    }
+
     return (
         <>
-            <StyledCard>
+            <StyledCard as={'form'} onSubmit={handleLogin}>
                 <h2>Logga In</h2>
-                <InputField type="text" placeholder="Namn"/>
-                <InputField type="password" placeholder="Lösenord"/>
+                { message !== '' && <MessageCard>{message}</MessageCard> }
+                <InputField type="text" placeholder="Namn" name={'username'} required />
+                <InputField type="password" placeholder="Lösenord" name={'password'} required />
 
                 <Button>Logga In</Button>
 
