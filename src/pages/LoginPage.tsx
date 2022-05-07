@@ -38,18 +38,20 @@ function LoginPage() {
 
     function handleLogin(event: FormEvent) {
         event.preventDefault();
+        setMessage('');
+
         const form = event.target as HTMLFormElement;
         const usernameInput = form.elements[0] as HTMLInputElement;
         const passwordInput = form.elements[1] as HTMLInputElement;
 
-        axios.post('http://localhost:8000/logga-in', {
+        axios.post('http://localhost:8000/api/v1/logga-in', {
             username: usernameInput.value,
             password: passwordInput.value,
         }).then(res => {
             if (res.status === 201) {
-                globalCtx.logIn();
+                globalCtx.logIn(res.data.admin);
             }
-            if(res.data.hasOwnProperty("err")){
+            else if(res.data.hasOwnProperty('err')){
                 setMessage(res.data.err);
             }
             else {

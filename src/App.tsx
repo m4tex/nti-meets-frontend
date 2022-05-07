@@ -24,9 +24,13 @@ function App() {
                     <Route path={'/artikel'} element={<ArticlePage />} />
                 </>
             }
+            { globalContext.triedLogin &&
+                <>
             <Route path={'/skapa-konto'} element={ globalContext.isLoggedIn ? <Navigate to={'/flode'}/> : <SignUpPage />} />
             <Route path='logga-in' element={ globalContext.isLoggedIn ? <Navigate to={'/flode'}/> : <LoginPage />} />
             <Route path={'*'} element={<NotFoundPage />} />
+                </>
+            }
         </Route>
     </Routes>
   );

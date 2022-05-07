@@ -7,11 +7,11 @@ import GlobalContextProvider from "./store/GlobalContextProvider";
 import ArticlePreviewContextProvider from "./store/ArticlePreviewContextProvider";
 
 ReactDOM.render(
-    <GlobalContextProvider>
-        <ArticlePreviewContextProvider>
-            <BrowserRouter>
+    <BrowserRouter>
+        <GlobalContextProvider>
+            <ArticlePreviewContextProvider>
                 <App/>
-            </BrowserRouter>
-        </ArticlePreviewContextProvider>
-    </GlobalContextProvider>,
+            </ArticlePreviewContextProvider>
+        </GlobalContextProvider>
+    </BrowserRouter>,
     document.getElementById('root'));

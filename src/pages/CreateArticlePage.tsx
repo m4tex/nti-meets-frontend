@@ -1,12 +1,14 @@
 import styled from "styled-components";
 import Card from "../components/UI/Card";
-import {useState, useContext, useRef, useEffect} from "react";
+import {useState, useContext, useRef, useEffect, FormEvent} from "react";
 import Switch from "../components/UI/Switch";
 import Button from "../components/UI/Button";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import InputField from "../components/UI/InputField";
 import TextAreaAutosized from "../components/UI/TextAreaAutosized";
 import {ArticlePreviewContext} from '../store/ArticlePreviewContextProvider';
+import axios from "axios";
+import axiosConfig from "../utils/axiosConfig";
 
 const StyledCard = styled(Card)`
   position: relative;
@@ -113,8 +115,13 @@ function CreateArticlePage() {
         nav('/artikel?prev');
     }
 
+    function createArticleHandler(event: FormEvent){
+        event.preventDefault();
+        axios.post('http://localhost:8000/api/v1/skapa-mote', {data: "wooo"}, axiosConfig);
+    }
+
     return  (
-        <StyledCard as={'form'} method={'post'}>
+        <StyledCard as={'form'} onSubmit={createArticleHandler} >
             <h2>Skapa ett Möte</h2>
             <InputField placeholder={'Titel (inkludera ej i Artikeln, även i HTML)'} name={'title'} ref={tref} />
             <div>

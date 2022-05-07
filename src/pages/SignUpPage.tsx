@@ -8,6 +8,7 @@ import {FormEvent, useContext, useState} from "react";
 import axios from "axios";
 import MessageCard from "../components/UI/MessageCard";
 import {GlobalContext} from "../store/GlobalContextProvider";
+import axiosConfig from "../utils/axiosConfig";
 
 const StyledCard = styled(SlimContentCard)`
   text-align: center;
@@ -35,15 +36,15 @@ function SignUpPage() {
         const mail = form.elements[1] as HTMLInputElement;
         const password = form.elements[3] as HTMLInputElement;
 
-        axios.post('http://localhost:8000/skapa-konto', {
+        axios.post('http://localhost:8000/api/v1/skapa-konto', {
             username: username.value,
             email: mail.value,
             password: password.value
-        }).then(res => {
+        }, axiosConfig).then(res => {
             if (res.status === 201) {
-                globalCtx.logIn();
+                globalCtx.logIn(false);
             }
-            if (res.data.hasOwnProperty('err')) {
+            else if (res.data.hasOwnProperty('err')) {
                 setMessage(res.data.err);
             }
             else {
