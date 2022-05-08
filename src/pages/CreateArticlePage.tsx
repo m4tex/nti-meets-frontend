@@ -9,6 +9,7 @@ import TextAreaAutosized from "../components/UI/TextAreaAutosized";
 import {ArticlePreviewContext} from '../store/ArticlePreviewContextProvider';
 import axios from "axios";
 import axiosConfig from "../utils/axiosConfig";
+import {GlobalContext} from "../store/GlobalContextProvider";
 
 const StyledCard = styled(Card)`
   position: relative;
@@ -75,6 +76,7 @@ const StyledCard = styled(Card)`
 `
 
 function CreateArticlePage() {
+    const globalCtx = useContext(GlobalContext);
     const [contentType, setContentType] = useState<boolean>(false);
     const tref = useRef<HTMLInputElement>(null);
     const dref = useRef<HTMLInputElement>(null);
@@ -108,7 +110,7 @@ function CreateArticlePage() {
         previewCtx.setArticlePreviewData({
             html:contentType,
             title: tref.current!.value,
-            author: "HELO",
+            author: globalCtx.username,
             date: new Date(dref.current!.value),
             content: cref.current!.value,
         })
@@ -117,7 +119,7 @@ function CreateArticlePage() {
 
     function createArticleHandler(event: FormEvent){
         event.preventDefault();
-        axios.post('http://localhost:8000/api/v1/articles', {data: "wooo"}, axiosConfig);
+        axios.post('http://localhost:8000/api/v1/articles', {data: "wooo"}, { withCredentials: true }).then(() => nav('/flode'));
     }
 
     return  (

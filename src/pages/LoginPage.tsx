@@ -11,7 +11,7 @@ import axios from "axios";
 
 const StyledCard = styled(SlimContentCard)`
   text-align: center;
-  
+
   h2 {
     font-size: 30px;
     padding: 10px 0;
@@ -47,37 +47,33 @@ function LoginPage() {
         axios.post('http://localhost:8000/api/v1/logga-in', {
             username: usernameInput.value,
             password: passwordInput.value,
-        }).then(res => {
+        }, {withCredentials: true}).then(res => {
             if (res.status === 201) {
                 globalCtx.logIn(res.data.admin);
-            }
-            else if(res.data.hasOwnProperty('err')){
+            } else if (res.data.hasOwnProperty('err')) {
                 setMessage(res.data.err);
-            }
-            else {
+            } else {
                 console.error('Unhandled exception in login response');
             }
         });
     }
 
     return (
-        <>
-            <StyledCard as={'form'} onSubmit={handleLogin}>
-                <h2>Logga In</h2>
-                { message !== '' && <MessageCard>{message}</MessageCard> }
-                <InputField type="text" placeholder="Namn" name={'username'} required />
-                <InputField type="password" placeholder="Lösenord" name={'password'} required />
+        <StyledCard as={'form'} onSubmit={handleLogin}>
+            <h2>Logga In</h2>
+            {message !== '' && <MessageCard>{message}</MessageCard>}
+            <InputField type="text" placeholder="Namn" name={'username'} required/>
+            <InputField type="password" placeholder="Lösenord" name={'password'} required/>
 
-                <Button>Logga In</Button>
+            <Button>Logga In</Button>
 
-                <div className={'breaker'}>
-                    <StyledHR />
-                    <p>eller</p>
-                </div>
+            <div className={'breaker'}>
+                <StyledHR/>
+                <p>eller</p>
+            </div>
 
-                <LinkAnchor nav={'/skapa-konto'}>Skapa ett konto</LinkAnchor>
-            </StyledCard>
-        </>
+            <LinkAnchor nav={'/skapa-konto'}>Skapa ett konto</LinkAnchor>
+        </StyledCard>
     );
 }
 

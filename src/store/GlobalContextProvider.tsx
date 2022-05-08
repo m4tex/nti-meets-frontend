@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 const ctxInit = {
+    username: '',
     isLoggedIn: false,
     isAdmin: false,
     triedLogin: false,
@@ -22,9 +23,13 @@ function GlobalContextProvider(props: {children:ReactNode}){
     let nav = useNavigate();
 
     useEffect(() => {
-        axios.post('http://localhost:8000/api/v1/sso').then(res => {
+        axios.post('http://localhost:8000/api/v1/sso', null, { withCredentials: true }).then(res => {
             if (res.status === 201){
                 contextValue.logIn(res.data.admin);
+                setContextValue(prevState => ({
+                    ...prevState,
+                    username: res.data.username,
+                }));
             }
             setContextValue(prevState => ({
                 ...prevState,
@@ -42,13 +47,13 @@ function GlobalContextProvider(props: {children:ReactNode}){
                 isAdmin: admin,
             }));
         },
-        logOut: () => {
+        logOut: async () => {
+            await axios.post('http://localhost:8000/api/v1/logout', null, { withCredentials: true });
             setContextValue(prevState => ({
                 ...prevState,
                 isLoggedIn: false,
                 isAdmin: false,
             }));
-            nav('/logga-in');
         }
     });
 
