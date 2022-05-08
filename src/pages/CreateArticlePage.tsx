@@ -117,7 +117,7 @@ function CreateArticlePage() {
 
     function createArticleHandler(event: FormEvent){
         event.preventDefault();
-        axios.post('http://localhost:8000/api/v1/skapa-mote', {data: "wooo"}, axiosConfig);
+        axios.post('http://localhost:8000/api/v1/articles', {data: "wooo"}, axiosConfig);
     }
 
     return  (
