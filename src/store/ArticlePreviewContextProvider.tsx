@@ -1,4 +1,4 @@
-    import React, {ReactNode, useState} from "react";
+import React, {ReactNode, useState} from "react";
 import {Article} from "../pages/ArticlePage";
 
 const ctxInit = {
@@ -6,7 +6,7 @@ const ctxInit = {
         html:false,
         author:"",
         title:"",
-        date: new Date(),
+        date: "",
         content:"",
     },
     setArticlePreviewData: (data: Article) => {},

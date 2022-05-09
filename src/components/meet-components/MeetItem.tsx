@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import Card from '../UI/Card';
 import DateDisplay from "../UI/DateDisplay";
 import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 const StyledDiv = styled(Card)`
   display: flex;
@@ -85,12 +87,18 @@ export interface MeetData {
     title: string,
     author: string,
     description: string,
-    date: Date,
+    date: string,
     admin: boolean,
 }
 
 function MeetItem(props: MeetData) {
     const nav = useNavigate();
+    const [authorUsername, setAuthorUsername] = useState<string>('');
+
+    useEffect(() => {
+        axios.get('http://localhost:8000/api/v1/user/' + props.author, { withCredentials: true })
+            .then(res => setAuthorUsername(res.data.username)).catch(err => console.log(err));
+    }, [])
 
     function titleClickHandler(){
         nav('/artikel?id=' + props.id)
@@ -101,7 +109,7 @@ function MeetItem(props: MeetData) {
             <div className={'main-content'}>
                 <div className={'title-row'}>
                     <h3 onClick={titleClickHandler}>{props.title}</h3>
-                    <p className={'author'}>{props.author}</p>
+                    <p className={'author'}>{authorUsername}</p>
                     { props.admin &&
                         <div className={'admin-buttons'}>
                             <button>Ta bort</button>

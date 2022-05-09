@@ -25,10 +25,11 @@ const StyledDiv = styled(Card)`
   }
 `
 
-function DateDisplay(props: { date: Date, style?:object }) {
-    const day = props.date.getDate();
-    const year = props.date.getFullYear();
-    const month = monthIndexToString(props.date.getMonth());
+function DateDisplay(props: { date: string, style?:object }) {
+    const date =  new Date(props.date);
+    const day = date.getDate();
+    const year = date.getFullYear();
+    const month = monthIndexToString(date.getMonth());
 
     function monthIndexToString(index: number) {
         switch (index) {
@@ -56,14 +57,16 @@ function DateDisplay(props: { date: Date, style?:object }) {
                 return 'Nov';
             case 11:
                 return 'Dec';
+            default:
+                return 'NaM';
         }
     }
 
     return (
-        <StyledDiv style={props.style} active={(props.date.getTime() - new Date().getTime()) < 0}>
-            <p>{day}</p>
-            <p>{month}</p>
-            <p>{year}</p>
+        <StyledDiv style={props.style} active={(date.getTime() - new Date().getTime()) < 0}>
+            <p>{day.toString()}</p>
+            <p>{month.toString()}</p>
+            <p>{year.toString()}</p>
         </StyledDiv>
     );
 }

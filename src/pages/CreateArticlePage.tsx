@@ -8,7 +8,6 @@ import InputField from "../components/UI/InputField";
 import TextAreaAutosized from "../components/UI/TextAreaAutosized";
 import {ArticlePreviewContext} from '../store/ArticlePreviewContextProvider';
 import axios from "axios";
-import axiosConfig from "../utils/axiosConfig";
 import {GlobalContext} from "../store/GlobalContextProvider";
 
 const StyledCard = styled(Card)`
@@ -100,7 +99,7 @@ function CreateArticlePage() {
     useEffect(() => {
         if (searchParams.has('bfp')){
             tref.current!.value = previewCtx.articlePreviewData.title;
-            dref.current!.value = previewCtx.articlePreviewData.date.toDateString();
+            dref.current!.value = previewCtx.articlePreviewData.date.toString();
             cref.current!.value = previewCtx.articlePreviewData.content;
             setContentType(previewCtx.articlePreviewData.html);
         }
@@ -111,7 +110,7 @@ function CreateArticlePage() {
             html:contentType,
             title: tref.current!.value,
             author: globalCtx.username,
-            date: new Date(dref.current!.value),
+            date: dref.current!.value,
             content: cref.current!.value,
         })
         nav('/artikel?prev');
@@ -119,23 +118,29 @@ function CreateArticlePage() {
 
     function createArticleHandler(event: FormEvent){
         event.preventDefault();
-        axios.post('http://localhost:8000/api/v1/articles', {data: "wooo"}, { withCredentials: true }).then(() => nav('/flode'));
+
+        axios.post('http://localhost:8000/api/v1/articles', {
+            "html" : contentType,
+            "title" : tref.current!.value,
+            "date" : dref.current!.value,
+            "content" : cref.current!.value,
+        }, { withCredentials: true }).then(() => nav('/flode'));
     }
 
     return  (
         <StyledCard as={'form'} onSubmit={createArticleHandler} >
             <h2>Skapa ett Möte</h2>
-            <InputField placeholder={'Titel (inkludera ej i Artikeln, även i HTML)'} name={'title'} ref={tref} />
+            <InputField placeholder={'Titel (inkludera ej i Artikeln, även i HTML)'} name={'title'} ref={tref} required />
             <div>
                 <label htmlFor="start-date">Påbörjelsedatum</label>
-                <InputField id={'start-date'} type={'date'} name={'start-date'} ref={dref} />
+                <InputField id={'start-date'} type={'date'} name={'start-date'} ref={dref} required />
             </div>
             <div>
                 <label htmlFor="content">Innehåll</label>
                 <Switch option1={'Text'} option2={'HTML'} onChange={val => setContentType(val)} value={contentType} />
             </div>
             { contentType && <div className={'warning'}>Varning, HTML attributer fungerar inte pga. att det går inte att skilja inmatade strängar från riktig kod. 'class' är den enda undantaget.</div> }
-            <TextAreaAutosized id={'content'} name={'article-content'} placeholder={'Skriv artikeln här...'} className={'textarea'} ref={cref} />
+            <TextAreaAutosized id={'content'} name={'article-content'} placeholder={'Skriv artikeln här...'} className={'textarea'} ref={cref} required />
             <div className={'button-row'}>
                 <Button type={'button'} onClick={previewArticleHandler}>
                     Förhandsvisning

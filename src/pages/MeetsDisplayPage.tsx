@@ -2,6 +2,7 @@ import Card from '../components/UI/Card';
 import styled from "styled-components";
 import MeetList from "../components/meet-components/MeetList";
 import {useEffect, useState} from "react";
+import axios from "axios";
 
 const StyledCard = styled(Card)`
   position: relative;
@@ -19,47 +20,19 @@ const PageTitle = styled.h2`
 `
 
 interface Article {
+    id:string,
     title: string,
     author: string,
-    date: Date,
+    date: string,
     description: string,
 }
 
-const offdate = new Date();
-offdate.setDate(20);
-
-const DUMMY_DATA = [
-    {
-        title: "Super Viktigt",
-        author: "Måns Rosenfors",
-        date: new Date(),
-        description: "På det här mötet kommer vi att diskutera om hur vi kan göra elevernas liv svårare och lidande.",
-    },
-    {
-        title: "Auper Viktigt",
-        author: "Aåns Rosenfors",
-        date: new Date(),
-        description: "På det här mötet kommer vi att diskutera om hur vi kan göra elevernas liv svårare och lidande.",
-    },
-    {
-        title: "Duper Viktigt",
-        author: "Zåns Rosenfors",
-        date: new Date(),
-        description: "På det här mötet kommer vi att diskutera om hur vi kan göra elevernas liv svårare och lidande.",
-    },
-    {
-        title: "Super Viktiiiigt",
-        author: "Måns Rosenfors",
-        date: offdate,
-        description: "På det här mötet kommer vi att diskutera om hur vi kan göra elevernas liv svårare och lidande.",
-    },
-]
-
-function MeetsDisplayPage(props: {title: string, dataLocationIndex: number}) {
-    const [articles, setArticles] = useState<Article[]>(DUMMY_DATA);
+function MeetsDisplayPage(props: {title: string}) {
+    const [articles, setArticles] = useState<Article[]>([]);
 
     useEffect(() => {
-
+        axios.get('http://localhost:8000/api/v1/articles', { withCredentials: true })
+            .then(res => setArticles(res.data.articles)).catch(err => console.log(err));
     }, []);
 
     return (

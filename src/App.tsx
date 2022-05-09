@@ -17,9 +17,9 @@ function App() {
         <Route path={'/'} element={<Layout />}>
             { globalContext.isLoggedIn &&
                 <>
-                    <Route path={'/flode'} element={<MeetsDisplayPage title={'Uppkommande Möten'} dataLocationIndex={0} />} />
-                    <Route path={'/arkiv'} element={<MeetsDisplayPage title={'Arkiv'} dataLocationIndex={1} />} />
-                    <Route path={'/favoriter'} element={<MeetsDisplayPage title={'Favoriter'} dataLocationIndex={2} />} />
+                    <Route path={'/flode'} element={<MeetsDisplayPage title={'Uppkommande Möten'} />} />
+                    <Route path={'/arkiv'} element={<MeetsDisplayPage title={'Arkiv'} />} />
+                    <Route path={'/favoriter'} element={<MeetsDisplayPage title={'Favoriter'} />} />
                     {globalContext.isAdmin && <Route path={'/skapa-mote'} element={<CreateArticlePage />} />}
                     <Route path={'/artikel'} element={<ArticlePage />} />
                 </>

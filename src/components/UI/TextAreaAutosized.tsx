@@ -7,10 +7,10 @@ const StyledTA = styled.textarea`
   padding: 5px;
 `
 
-const TextAreaAutosized = React.forwardRef<HTMLTextAreaElement, {name:string, id?:string, placeholder?:string, className?:string}>(function(props, ref) {
+const TextAreaAutosized = React.forwardRef<HTMLTextAreaElement, {name:string, id?:string, placeholder?:string, className?:string, required?:boolean}>(function(props, ref) {
     const [textValue, setTextValue] = useState<string>('');
 
-    //I love typescript (no)
+    //I love typescript (no) (took 45 minutes of my life)
     function isRef(ref: ForwardedRef<HTMLTextAreaElement>) : ref is MutableRefObject<HTMLTextAreaElement> {
         return (ref as MutableRefObject<HTMLTextAreaElement>).current !== undefined;
     }
@@ -23,7 +23,7 @@ const TextAreaAutosized = React.forwardRef<HTMLTextAreaElement, {name:string, id
     }, [textValue]);
 
     return (
-        <StyledTA {...props} ref={ref} value={textValue} onChange={e => setTextValue(e.target.value)} style={{resize:"none"}} />
+        <StyledTA {...props} ref={ref} value={textValue} onChange={e => setTextValue(e.target.value)} style={{resize:"none"}} required={props.required} />
     )
 });
 

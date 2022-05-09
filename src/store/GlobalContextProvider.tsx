@@ -9,7 +9,7 @@ const ctxInit = {
     isAdmin: false,
     triedLogin: false,
     favorites: [],
-    logIn: (admin: boolean) => {},
+    logIn: (admin: boolean, username:string) => {},
     logOut: () => {},
     addFavorite: (id:string|null) => {},
     removeFavorite: (id:string|null) => {},
@@ -25,11 +25,7 @@ function GlobalContextProvider(props: {children:ReactNode}){
     useEffect(() => {
         axios.post('http://localhost:8000/api/v1/sso', null, { withCredentials: true }).then(res => {
             if (res.status === 201){
-                contextValue.logIn(res.data.admin);
-                setContextValue(prevState => ({
-                    ...prevState,
-                    username: res.data.username,
-                }));
+                contextValue.logIn(res.data.admin, res.data.username);
             }
             setContextValue(prevState => ({
                 ...prevState,
@@ -40,11 +36,12 @@ function GlobalContextProvider(props: {children:ReactNode}){
 
     let [contextValue, setContextValue] = useState<GlobalContent>({
         ...ctxInit,
-        logIn: (admin: boolean) => {
+        logIn: (admin: boolean, username: string) => {
             setContextValue(prevState => ({
                 ...prevState,
                 isLoggedIn: true,
                 isAdmin: admin,
+                username: username
             }));
         },
         logOut: async () => {

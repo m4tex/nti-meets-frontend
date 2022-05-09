@@ -8,7 +8,6 @@ import {FormEvent, useContext, useState} from "react";
 import axios from "axios";
 import MessageCard from "../components/UI/MessageCard";
 import {GlobalContext} from "../store/GlobalContextProvider";
-import axiosConfig from "../utils/axiosConfig";
 
 const StyledCard = styled(SlimContentCard)`
   text-align: center;
@@ -40,9 +39,9 @@ function SignUpPage() {
             username: username.value,
             email: mail.value,
             password: password.value
-        }, axiosConfig).then(res => {
+        }, { withCredentials: true }).then(res => {
             if (res.status === 201) {
-                globalCtx.logIn(false);
+                globalCtx.logIn(false, res.data.username);
             }
             else if (res.data.hasOwnProperty('err')) {
                 setMessage(res.data.err);

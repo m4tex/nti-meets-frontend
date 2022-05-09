@@ -8,6 +8,7 @@ import { GlobalContext } from "../store/GlobalContextProvider";
 import { ArticlePreviewContext } from '../store/ArticlePreviewContextProvider'
 import HTMLReactParser from "html-react-parser";
 import Button from "../components/UI/Button";
+import axios from "axios";
 
 const StyledCard = styled(Card)`
   position: relative;
@@ -82,39 +83,18 @@ export interface Article {
     author: string,
     title: string,
     content: string,
-    date: Date,
-}
-
-const DUMMY_DATA = {
-    html: false,
-    title: "Super Viktigt",
-    author: "Måns Rosenfors",
-    date: new Date(),
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum metus tellus, sagittis a tincidunt at, imperdiet non justo. Donec id magna nunc. Sed dapibus sollicitudin nibh eu molestie. Duis quis mauris eget dui efficitur rutrum. Proin commodo purus id erat maximus commodo. Suspendisse vehicula dui hendrerit sapien porta sodales. Maecenas posuere lorem in sem iaculis tincidunt. Nulla bibendum enim at turpis auctor, quis viverra dui semper. Praesent rhoncus pulvinar justo at viverra. Aenean ultricies varius iaculis." +
-        "Phasellus auctor suscipit ligula, sit amet interdum enim congue vehicula. Proin bibendum augue non diam sollicitudin ultrices. Quisque tempor mollis mauris vel varius. Phasellus ut vulputate ipsum. Nullam ac feugiat lacus. Praesent tempus bibendum lorem vitae porttitor. Maecenas ac gravida nulla." +
-        "Aliquam quis velit ac orci mattis sagittis. Quisque quis quam dapibus, facilisis sapien id, accumsan urna. Nunc non dolor vel eros ultrices hendrerit nec ac nibh. Sed condimentum dolor et maximus iaculis. Aenean malesuada purus at nisl rutrum, id tempus turpis tincidunt. Vivamus hendrerit laoreet enim vel aliquet. In vitae elit eu felis cursus molestie. Quisque at magna ut lorem rutrum iaculis." +
-        "Nam ante eros, vestibulum quis diam vitae, interdum fringilla augue. Quisque tempor tristique mauris quis aliquet. In hac habitasse platea dictumst. Nullam aliquam orci vel arcu tincidunt, eget luctus nunc sagittis. Quisque eget aliquam urna. Suspendisse potenti. Curabitur venenatis sodales ante in ornare. Vivamus venenatis, eros a gravida tempor, libero metus molestie tellus, at accumsan sem diam sed est." +
-        "Duis vitae ex feugiat, vulputate erat a, sagittis metus. Mauris vel aliquet enim, nec feugiat erat. Etiam faucibus, elit at pretium vulputate, dui elit semper orci, quis semper lacus diam mattis ligula. Vestibulum eu justo interdum, malesuada mi quis, faucibus massa. Donec auctor ante lectus, vitae hendrerit ex posuere et. Aliquam sodales urna eu elit maximus efficitur. Proin auctor ipsum dignissim nisl dignissim efficitur. Ut nec porttitor nisi. Maecenas aliquam ultrices sem sed porttitor. Donec imperdiet pellentesque iaculis. Duis id augue velit." +
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum metus tellus, sagittis a tincidunt at, imperdiet non justo. Donec id magna nunc. Sed dapibus sollicitudin nibh eu molestie. Duis quis mauris eget dui efficitur rutrum. Proin commodo purus id erat maximus commodo. Suspendisse vehicula dui hendrerit sapien porta sodales. Maecenas posuere lorem in sem iaculis tincidunt. Nulla bibendum enim at turpis auctor, quis viverra dui semper. Praesent rhoncus pulvinar justo at viverra. Aenean ultricies varius iaculis." +
-        "Phasellus auctor suscipit ligula, sit amet interdum enim congue vehicula. Proin bibendum augue non diam sollicitudin ultrices. Quisque tempor mollis mauris vel varius. Phasellus ut vulputate ipsum. Nullam ac feugiat lacus. Praesent tempus bibendum lorem vitae porttitor. Maecenas ac gravida nulla." +
-        "Aliquam quis velit ac orci mattis sagittis. Quisque quis quam dapibus, facilisis sapien id, accumsan urna. Nunc non dolor vel eros ultrices hendrerit nec ac nibh. Sed condimentum dolor et maximus iaculis. Aenean malesuada purus at nisl rutrum, id tempus turpis tincidunt. Vivamus hendrerit laoreet enim vel aliquet. In vitae elit eu felis cursus molestie. Quisque at magna ut lorem rutrum iaculis." +
-        "Nam ante eros, vestibulum quis diam vitae, interdum fringilla augue. Quisque tempor tristique mauris quis aliquet. In hac habitasse platea dictumst. Nullam aliquam orci vel arcu tincidunt, eget luctus nunc sagittis. Quisque eget aliquam urna. Suspendisse potenti. Curabitur venenatis sodales ante in ornare. Vivamus venenatis, eros a gravida tempor, libero metus molestie tellus, at accumsan sem diam sed est." +
-        "Duis vitae ex feugiat, vulputate erat a, sagittis metus. Mauris vel aliquet enim, nec feugiat erat. Etiam faucibus, elit at pretium vulputate, dui elit semper orci, quis semper lacus diam mattis ligula. Vestibulum eu justo interdum, malesuada mi quis, faucibus massa. Donec auctor ante lectus, vitae hendrerit ex posuere et. Aliquam sodales urna eu elit maximus efficitur. Proin auctor ipsum dignissim nisl dignissim efficitur. Ut nec porttitor nisi. Maecenas aliquam ultrices sem sed porttitor. Donec imperdiet pellentesque iaculis. Duis id augue velit." +
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum metus tellus, sagittis a tincidunt at, imperdiet non justo. Donec id magna nunc. Sed dapibus sollicitudin nibh eu molestie. Duis quis mauris eget dui efficitur rutrum. Proin commodo purus id erat maximus commodo. Suspendisse vehicula dui hendrerit sapien porta sodales. Maecenas posuere lorem in sem iaculis tincidunt. Nulla bibendum enim at turpis auctor, quis viverra dui semper. Praesent rhoncus pulvinar justo at viverra. Aenean ultricies varius iaculis." +
-        "Phasellus auctor suscipit ligula, sit amet interdum enim congue vehicula. Proin bibendum augue non diam sollicitudin ultrices. Quisque tempor mollis mauris vel varius. Phasellus ut vulputate ipsum. Nullam ac feugiat lacus. Praesent tempus bibendum lorem vitae porttitor. Maecenas ac gravida nulla." +
-        "Aliquam quis velit ac orci mattis sagittis. Quisque quis quam dapibus, facilisis sapien id, accumsan urna. Nunc non dolor vel eros ultrices hendrerit nec ac nibh. Sed condimentum dolor et maximus iaculis. Aenean malesuada purus at nisl rutrum, id tempus turpis tincidunt. Vivamus hendrerit laoreet enim vel aliquet. In vitae elit eu felis cursus molestie. Quisque at magna ut lorem rutrum iaculis." +
-        "Nam ante eros, vestibulum quis diam vitae, interdum fringilla augue. Quisque tempor tristique mauris quis aliquet. In hac habitasse platea dictumst. Nullam aliquam orci vel arcu tincidunt, eget luctus nunc sagittis. Quisque eget aliquam urna. Suspendisse potenti. Curabitur venenatis sodales ante in ornare. Vivamus venenatis, eros a gravida tempor, libero metus molestie tellus, at accumsan sem diam sed est." +
-        "Duis vitae ex feugiat, vulputate erat a, sagittis metus. Mauris vel aliquet enim, nec feugiat erat. Etiam faucibus, elit at pretium vulputate, dui elit semper orci, quis semper lacus diam mattis ligula. Vestibulum eu justo interdum, malesuada mi quis, faucibus massa. Donec auctor ante lectus, vitae hendrerit ex posuere et. Aliquam sodales urna eu elit maximus efficitur. Proin auctor ipsum dignissim nisl dignissim efficitur. Ut nec porttitor nisi. Maecenas aliquam ultrices sem sed porttitor. Donec imperdiet pellentesque iaculis. Duis id augue velit." +
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum metus tellus, sagittis a tincidunt at, imperdiet non justo. Donec id magna nunc. Sed dapibus sollicitudin nibh eu molestie. Duis quis mauris eget dui efficitur rutrum. Proin commodo purus id erat maximus commodo. Suspendisse vehicula dui hendrerit sapien porta sodales. Maecenas posuere lorem in sem iaculis tincidunt. Nulla bibendum enim at turpis auctor, quis viverra dui semper. Praesent rhoncus pulvinar justo at viverra. Aenean ultricies varius iaculis." +
-        "Phasellus auctor suscipit ligula, sit amet interdum enim congue vehicula. Proin bibendum augue non diam sollicitudin ultrices. Quisque tempor mollis mauris vel varius. Phasellus ut vulputate ipsum. Nullam ac feugiat lacus. Praesent tempus bibendum lorem vitae porttitor. Maecenas ac gravida nulla." +
-        "Aliquam quis velit ac orci mattis sagittis. Quisque quis quam dapibus, facilisis sapien id, accumsan urna. Nunc non dolor vel eros ultrices hendrerit nec ac nibh. Sed condimentum dolor et maximus iaculis. Aenean malesuada purus at nisl rutrum, id tempus turpis tincidunt. Vivamus hendrerit laoreet enim vel aliquet. In vitae elit eu felis cursus molestie. Quisque at magna ut lorem rutrum iaculis." +
-        "Nam ante eros, vestibulum quis diam vitae, interdum fringilla augue. Quisque tempor tristique mauris quis aliquet. In hac habitasse platea dictumst. Nullam aliquam orci vel arcu tincidunt, eget luctus nunc sagittis. Quisque eget aliquam urna. Suspendisse potenti. Curabitur venenatis sodales ante in ornare. Vivamus venenatis, eros a gravida tempor, libero metus molestie tellus, at accumsan sem diam sed est." +
-        "Duis vitae ex feugiat, vulputate erat a, sagittis metus. Mauris vel aliquet enim, nec feugiat erat. Etiam faucibus, elit at pretium vulputate, dui elit semper orci, quis semper lacus diam mattis ligula. Vestibulum eu justo interdum, malesuada mi quis, faucibus massa. Donec auctor ante lectus, vitae hendrerit ex posuere et. Aliquam sodales urna eu elit maximus efficitur. Proin auctor ipsum dignissim nisl dignissim efficitur. Ut nec porttitor nisi. Maecenas aliquam ultrices sem sed porttitor. Donec imperdiet pellentesque iaculis. Duis id augue velit.",
+    date: string,
 }
 
 function ArticlePage() {
     const [searchParams] = useSearchParams();
-    const [articleData, setArticleData] = useState<Article>(DUMMY_DATA);
+    const [articleData, setArticleData] = useState<Article>({
+        html:false,
+        author:'',
+        title:'',
+        content:'',
+        date: '',
+    });
     const [optListOpen, setOptListOpen] = useState<boolean>(false);
     const optRef = useRef<HTMLDivElement>(null);
     const globalCtx = useContext(GlobalContext);
@@ -141,9 +121,20 @@ function ArticlePage() {
     }, []);
 
     useEffect(() => {
-        if (searchParams.has('prev')){
-            setArticleData(artPreviewCtx.articlePreviewData);
+         if(searchParams.has('id')){
+            axios.get('http://localhost:8000/api/v1/articles/' + searchParams.get('id'), { withCredentials: true })
+                .then(res => {
+                    console.log(res.data.article);
+                    setArticleData(res.data.article);
+                    axios.get('http://localhost:8000/api/v1/user/' + res.data.article.author, { withCredentials: true }).
+                        then(res => setArticleData(prevState => ({...prevState, author: res.data.username}))).
+                    catch(err => console.log(err));
+                }).catch(err => console.log(err));
         }
+         else if (searchParams.has('prev')){
+             setArticleData(artPreviewCtx.articlePreviewData);
+        }
+
     }, [searchParams]);
 
     useEffect(() => {
@@ -158,7 +149,7 @@ function ArticlePage() {
 
     return (
         <StyledCard as={'article'}>
-            { searchParams.has('prev') && <Button className={'back-btn'} onClick={backToPrevHandler}>Gå tillbaks</Button>}
+            { searchParams.has('prev') && <Button className={'back-btn'} onClick={backToPrevHandler}>Gå tillbaka</Button>}
             <span className={'material-icons'} onClick={optListHandler}>
                 expand_more
             </span>

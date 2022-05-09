@@ -5,9 +5,10 @@ import MeetsSearchBar from "./MeetsSearchBar";
 import MeetsFilter from "./MeetsFilter";
 
 interface Article {
+    id:string,
     title: string,
     author: string,
-    date: Date,
+    date: string,
     description: string,
 }
 
@@ -19,7 +20,9 @@ function MeetList(props: { data: Article[] }) {
 
     function sortingFunction(a:Article, b:Article) {
         if (filter === '1'){
-            return a.date.getTime() - b.date.getTime();
+            const A = new Date(a.date);
+            const B = new Date(b.date);
+            return A.getTime() - B.getTime();
         }
         if(filter === '2'){
             const A = a.title.toUpperCase();
@@ -44,7 +47,7 @@ function MeetList(props: { data: Article[] }) {
         <>
             <MeetsSearchBar onSearch={e=>setSearchValue(e.target.value)} value={searchValue} />
             <MeetsFilter onFilter={e=>setFilter(e.target.value)} value={filter}/>
-            {filteredArticles.map(x => <MeetItem key={Math.random()} id={'super-viktigt'} {...x} admin={isAdmin}/>)}
+            {filteredArticles.map(x => <MeetItem key={Math.random()} {...x} admin={isAdmin}/>)}
         </>
     )
 }
