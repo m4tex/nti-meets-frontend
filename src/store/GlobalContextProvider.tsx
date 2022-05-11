@@ -7,12 +7,12 @@ const ctxInit = {
     username: '',
     isLoggedIn: false,
     isAdmin: false,
-    triedLogin: false,
-    favorites: [],
-    logIn: (admin: boolean, username:string) => {},
+    triedSSO: false,
+    logIn: (admin: boolean, username:string, favorites: string[]) => {},
     logOut: () => {},
-    addFavorite: (id:string|null) => {},
-    removeFavorite: (id:string|null) => {},
+    addFavorite: (id:string) => {},
+    removeFavorite: (id:string) => {},
+    favorites: [] as string[],
 }
 
 export type GlobalContent = typeof ctxInit;
@@ -22,26 +22,28 @@ export let GlobalContext = React.createContext<GlobalContent>(ctxInit);
 function GlobalContextProvider(props: {children:ReactNode}){
     let nav = useNavigate();
 
+    //Single Sign On re-logger
     useEffect(() => {
         axios.post('http://localhost:8000/api/v1/sso', null, { withCredentials: true }).then(res => {
             if (res.status === 201){
-                contextValue.logIn(res.data.admin, res.data.username);
+                contextValue.logIn(res.data.admin, res.data.username, res.data.favorites);
             }
             setContextValue(prevState => ({
                 ...prevState,
-                triedLogin: true,
+                triedSSO: true,
             }));
         }).catch(err => console.log(err));
     }, [])
 
     let [contextValue, setContextValue] = useState<GlobalContent>({
         ...ctxInit,
-        logIn: (admin: boolean, username: string) => {
+        logIn: (admin: boolean, username: string, favorites: string[]) => {
             setContextValue(prevState => ({
                 ...prevState,
                 isLoggedIn: true,
                 isAdmin: admin,
-                username: username
+                username: username,
+                favorites: favorites
             }));
         },
         logOut: async () => {
@@ -50,6 +52,14 @@ function GlobalContextProvider(props: {children:ReactNode}){
                 ...prevState,
                 isLoggedIn: false,
                 isAdmin: false,
+            }));
+        },
+        addFavorite: async (id:string) => {
+            console.log('adding favorite :333')
+            await axios.post('http://localhost:8000/api/v1/favorites', {"favorite": id}, { withCredentials: true}).catch(err => console.log(err));
+            setContextValue(prevState => ({
+                ...prevState,
+                favorites: [...prevState.favorites, id],
             }));
         }
     });

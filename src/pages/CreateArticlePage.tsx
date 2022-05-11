@@ -130,7 +130,7 @@ function CreateArticlePage() {
     return  (
         <StyledCard as={'form'} onSubmit={createArticleHandler} >
             <h2>Skapa ett Möte</h2>
-            <InputField placeholder={'Titel (inkludera ej i Artikeln, även i HTML)'} name={'title'} ref={tref} required />
+            <InputField placeholder={'Titel (inkludera ej i Artikeln, även i HTML)'} name={'title'} maxLength={28} ref={tref} required />
             <div>
                 <label htmlFor="start-date">Påbörjelsedatum</label>
                 <InputField id={'start-date'} type={'date'} name={'start-date'} ref={dref} required />

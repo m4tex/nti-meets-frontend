@@ -19,17 +19,17 @@ const PageTitle = styled.h2`
   margin-bottom: 25px;
 `
 
-function MeetsDisplayPage() {
+function ArchivePage() {
     const articleCtx = useContext(ArticleContext);
 
     return (
         <>
-            <PageTitle>Uppkommande Möten</PageTitle>
+            <PageTitle>Arkiv</PageTitle>
             <StyledCard>
-                <MeetList data={articleCtx.articles}/>
+                <MeetList data={articleCtx.articles.filter(art => new Date(art.date).getTime() < new Date().getTime())}/>
             </StyledCard>
         </>
     );
 }
 
-export default MeetsDisplayPage;
+export default ArchivePage;

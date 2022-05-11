@@ -4,6 +4,7 @@ import DateDisplay from "../UI/DateDisplay";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import Modal from "../UI/Modal";
 
 const StyledDiv = styled(Card)`
   display: flex;
@@ -94,6 +95,7 @@ export interface MeetData {
 function MeetItem(props: MeetData) {
     const nav = useNavigate();
     const [authorUsername, setAuthorUsername] = useState<string>('');
+    const [showModal, setShowModal] = useState<boolean>(false);
 
     useEffect(() => {
         axios.get('http://localhost:8000/api/v1/user/' + props.author, { withCredentials: true })
@@ -104,17 +106,28 @@ function MeetItem(props: MeetData) {
         nav('/artikel?id=' + props.id)
     }
 
+    function deleteMeetHandler() {
+        axios.delete('http://localhost:8000/api/v1/articles/' + props.id, { withCredentials:true }).
+        then(() => setShowModal(false)).catch(err => console.log(err));
+    }
+
     return (
         <StyledDiv>
+            { showModal &&
+                <Modal dialog={'Är du säker att du vill ta bort detta möte?'}
+                       buttonData={ [{ name: 'Ja', event: deleteMeetHandler },
+                           { name: 'Nej', event: () => setShowModal(false) }] } />
+            }
             <div className={'main-content'}>
                 <div className={'title-row'}>
                     <h3 onClick={titleClickHandler}>{props.title}</h3>
                     <p className={'author'}>{authorUsername}</p>
                     { props.admin &&
                         <div className={'admin-buttons'}>
-                            <button>Ta bort</button>
+                            <button onClick={() => setShowModal(true)}>Ta bort</button>
                             <button>Redigera</button>
-                        </div> }
+                        </div>
+                    }
                 </div>
                 <p className={'description'}>{props.description}</p>
             </div>

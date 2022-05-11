@@ -6,13 +6,13 @@ import {useContext} from "react";
 
 function Layout(){
     const nav = useNavigate();
-    const { isLoggedIn } = useContext(GlobalContext);
+    const { isLoggedIn, triedSSO } = useContext(GlobalContext);
 
     return (
         <>
             <header className={classes.header}>
                 <h1 className={classes.logo} onClick={() => nav( isLoggedIn ? '/flode' : 'logga-in' )}>NTI Möten</h1>
-                <HeaderNavigation />
+                { triedSSO && <HeaderNavigation /> }
             </header>
             <main className={classes.main}>
                 <Outlet />

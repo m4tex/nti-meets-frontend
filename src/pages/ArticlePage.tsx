@@ -64,6 +64,7 @@ const StyledCard = styled(Card)`
     text-align: left;
     padding: 0 20px;
     margin-bottom: 15px;
+    word-break: break-word;
   }
 
   .optList {
@@ -124,7 +125,6 @@ function ArticlePage() {
          if(searchParams.has('id')){
             axios.get('http://localhost:8000/api/v1/articles/' + searchParams.get('id'), { withCredentials: true })
                 .then(res => {
-                    console.log(res.data.article);
                     setArticleData(res.data.article);
                     axios.get('http://localhost:8000/api/v1/user/' + res.data.article.author, { withCredentials: true }).
                         then(res => setArticleData(prevState => ({...prevState, author: res.data.username}))).
@@ -134,12 +134,15 @@ function ArticlePage() {
          else if (searchParams.has('prev')){
              setArticleData(artPreviewCtx.articlePreviewData);
         }
+        else {
+            nav('/flode');
+         }
 
     }, [searchParams]);
 
     useEffect(() => {
         function checkForClickOutside(e:MouseEvent) {
-            if (e.target && e.target !== optRef.current) {
+            if (optRef.current && !optRef.current.contains(e.target as Node)) {
                 setOptListOpen(false);
             }
         }
@@ -147,14 +150,26 @@ function ArticlePage() {
         return () => document.removeEventListener('mousedown', checkForClickOutside); //Yay, I caused a memory leak (this line fixes it)
     }, [])
 
+    const id = searchParams.get('id') as string;
+
+    function addFavoriteHandler() {
+        if(globalCtx.favorites.includes(id)) {
+            //remove favorite
+        }
+        else {
+            globalCtx.addFavorite(id);
+        }
+        setOptListOpen(false);
+    }
+
     return (
         <StyledCard as={'article'}>
             { searchParams.has('prev') && <Button className={'back-btn'} onClick={backToPrevHandler}>Gå tillbaka</Button>}
             <span className={'material-icons'} onClick={optListHandler}>
                 expand_more
             </span>
-            {optListOpen && <div className={'optList'} onClick={() => globalCtx.addFavorite(searchParams.get('id'))}>Markera som favorit</div>}
-            <div className={'date'} ref={optRef}>
+            {optListOpen && <div className={'optList'} ref={optRef} onClick={addFavoriteHandler}>{globalCtx.favorites.includes(id) ? 'Ta bort från favoriter' : 'Markera som favorit' }</div>}
+            <div className={'date'}>
                 <DateDisplay date={articleData.date}/>
             </div>
             <h2>{articleData.title}</h2>

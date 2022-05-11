@@ -49,7 +49,7 @@ function LoginPage() {
             password: passwordInput.value,
         }, {withCredentials: true}).then(res => {
             if (res.status === 201) {
-                globalCtx.logIn(res.data.admin, res.data.username);
+                globalCtx.logIn(res.data.admin, res.data.username, res.data.favorites);
             } else if (res.data.hasOwnProperty('err')) {
                 setMessage(res.data.err);
             } else {

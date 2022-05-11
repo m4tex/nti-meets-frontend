@@ -1,13 +1,15 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import { GlobalContext } from "./store/GlobalContextProvider";
-import { useContext } from "react";
+import {useContext, useEffect} from "react";
 import NotFoundPage from "./pages/NotFoundPage";
 import MeetsDisplayPage from "./pages/MeetsDisplayPage";
 import LoginPage from "./pages/LoginPage";
 import ArticlePage from "./pages/ArticlePage";
 import SignUpPage from "./pages/SignUpPage";
 import CreateArticlePage from "./pages/CreateArticlePage";
+import ArchivePage from "./pages/ArchivePage";
+import FavoritesPage from "./pages/FavoritesPage";
 
 function App() {
     let globalContext = useContext(GlobalContext);
@@ -17,14 +19,14 @@ function App() {
         <Route path={'/'} element={<Layout />}>
             { globalContext.isLoggedIn &&
                 <>
-                    <Route path={'/flode'} element={<MeetsDisplayPage title={'Uppkommande Möten'} />} />
-                    <Route path={'/arkiv'} element={<MeetsDisplayPage title={'Arkiv'} />} />
-                    <Route path={'/favoriter'} element={<MeetsDisplayPage title={'Favoriter'} />} />
+                    <Route path={'/flode'} element={<MeetsDisplayPage  />} />
+                    <Route path={'/arkiv'} element={<ArchivePage />} />
+                    <Route path={'/favoriter'} element={<FavoritesPage />} />
                     {globalContext.isAdmin && <Route path={'/skapa-mote'} element={<CreateArticlePage />} />}
                     <Route path={'/artikel'} element={<ArticlePage />} />
                 </>
             }
-            { globalContext.triedLogin &&
+            { globalContext.triedSSO &&
                 <>
             <Route path={'/skapa-konto'} element={ globalContext.isLoggedIn ? <Navigate to={'/flode'}/> : <SignUpPage />} />
             <Route path='logga-in' element={ globalContext.isLoggedIn ? <Navigate to={'/flode'}/> : <LoginPage />} />

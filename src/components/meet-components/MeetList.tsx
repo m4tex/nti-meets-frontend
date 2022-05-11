@@ -47,7 +47,7 @@ function MeetList(props: { data: Article[] }) {
         <>
             <MeetsSearchBar onSearch={e=>setSearchValue(e.target.value)} value={searchValue} />
             <MeetsFilter onFilter={e=>setFilter(e.target.value)} value={filter}/>
-            {filteredArticles.map(x => <MeetItem key={Math.random()} {...x} admin={isAdmin}/>)}
+            {filteredArticles.map(x => <MeetItem key={x.id} {...x} admin={isAdmin}/>)}
         </>
     )
 }

@@ -41,7 +41,7 @@ function SignUpPage() {
             password: password.value
         }, { withCredentials: true }).then(res => {
             if (res.status === 201) {
-                globalCtx.logIn(false, res.data.username);
+                globalCtx.logIn(false, res.data.username, []);
             }
             else if (res.data.hasOwnProperty('err')) {
                 setMessage(res.data.err);
