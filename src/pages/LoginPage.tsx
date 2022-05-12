@@ -62,8 +62,8 @@ function LoginPage() {
         <StyledCard as={'form'} onSubmit={handleLogin}>
             <h2>Logga In</h2>
             {message !== '' && <MessageCard>{message}</MessageCard>}
-            <InputField type="text" placeholder="Namn" name={'username'} required/>
-            <InputField type="password" placeholder="Lösenord" name={'password'} required/>
+            <InputField type="text" placeholder="Namn" name={'username'} required maxLength={20}/>
+            <InputField type="password" placeholder="Lösenord" name={'password'} required maxLength={20}/>
 
             <Button>Logga In</Button>
 

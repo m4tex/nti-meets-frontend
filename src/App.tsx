@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import { GlobalContext } from "./store/GlobalContextProvider";
-import {useContext, useEffect} from "react";
+import {useContext} from "react";
 import NotFoundPage from "./pages/NotFoundPage";
 import MeetsDisplayPage from "./pages/MeetsDisplayPage";
 import LoginPage from "./pages/LoginPage";
@@ -28,9 +28,9 @@ function App() {
             }
             { globalContext.triedSSO &&
                 <>
-            <Route path={'/skapa-konto'} element={ globalContext.isLoggedIn ? <Navigate to={'/flode'}/> : <SignUpPage />} />
-            <Route path='logga-in' element={ globalContext.isLoggedIn ? <Navigate to={'/flode'}/> : <LoginPage />} />
-            <Route path={'*'} element={<NotFoundPage />} />
+                    <Route path={'/skapa-konto'} element={ globalContext.isLoggedIn ? <Navigate to={'/flode'}/> : <SignUpPage />} />
+                    <Route path='logga-in' element={ globalContext.isLoggedIn ? <Navigate to={'/flode'}/> : <LoginPage />} />
+                    <Route path={'*'} element={<NotFoundPage />} />
                 </>
             }
         </Route>

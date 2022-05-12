@@ -26,7 +26,7 @@ function ArchivePage() {
         <>
             <PageTitle>Arkiv</PageTitle>
             <StyledCard>
-                <MeetList data={articleCtx.articles.filter(art => new Date(art.date).getTime() < new Date().getTime())}/>
+                <MeetList data={articleCtx.articles?.filter(art => new Date(art.date).getTime() < new Date().getTime())}/>
             </StyledCard>
         </>
     );

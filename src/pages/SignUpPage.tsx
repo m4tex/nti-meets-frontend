@@ -1,5 +1,4 @@
 import SlimContentCard from "../components/UI/SlimContentCard";
-import Card from "../components/UI/Card";
 import InputField from "../components/UI/InputField";
 import LinkAnchor from "../components/UI/LinkAnchor";
 import Button from "../components/UI/Button";
@@ -33,7 +32,13 @@ function SignUpPage() {
         const form = event.target as HTMLFormElement;
         const username = form.elements[0] as HTMLInputElement;
         const mail = form.elements[1] as HTMLInputElement;
-        const password = form.elements[3] as HTMLInputElement;
+        const password = form.elements[2] as HTMLInputElement;
+        const password2 = form.elements[3] as HTMLInputElement;
+
+        if (password.value !== password2.value) {
+            setMessage('Lösenord är inte lika');
+            return;
+        }
 
         axios.post('http://localhost:8000/api/v1/skapa-konto', {
             username: username.value,
@@ -56,10 +61,10 @@ function SignUpPage() {
         <StyledCard as={'form'} onSubmit={signUpHandler}>
             <h2>Skapa ett konto</h2>
             {message !== '' && <MessageCard>{message}</MessageCard>}
-            <InputField placeholder={'Namn'} required/>
-            <InputField type={'email'} placeholder={'Mejladress'} required/>
-            <InputField type={'password'} placeholder={'Lösenord'} required/>
-            <InputField type={'password'} placeholder={'Bekräfta Lösenord'} required/>
+            <InputField placeholder={'Namn'} required maxLength={20}/>
+            <InputField type={'email'} placeholder={'Mejladress'} required maxLength={30} />
+            <InputField type={'password'} placeholder={'Lösenord (max 20 tecken)'} required maxLength={20} />
+            <InputField type={'password'} placeholder={'Bekräfta Lösenord'} required maxLength={20} />
 
             <Button type={'submit'}>Skapa</Button>
 

@@ -26,7 +26,7 @@ function MeetsDisplayPage() {
         <>
             <PageTitle>Uppkommande Möten</PageTitle>
             <StyledCard>
-                <MeetList data={articleCtx.articles}/>
+                <MeetList data={articleCtx.articles.filter(article => new Date(article.date).getTime() > new Date().getTime())}/>
             </StyledCard>
         </>
     );
