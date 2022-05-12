@@ -4,7 +4,7 @@ import styled from "styled-components";
 const StyledTA = styled.textarea`
   border-radius: 8px;
   border: 1px solid #a9a9a9;
-  padding: 5px;
+  padding: 8px;
 `
 
 const TextAreaAutosized = React.forwardRef<HTMLTextAreaElement, {name:string, id?:string, placeholder?:string, className?:string, required?:boolean}>(function(props, ref) {
@@ -23,7 +23,7 @@ const TextAreaAutosized = React.forwardRef<HTMLTextAreaElement, {name:string, id
     }, [textValue]);
 
     return (
-        <StyledTA {...props} ref={ref} value={textValue} onChange={e => setTextValue(e.target.value)} style={{resize:"none"}} required={props.required} />
+        <StyledTA name={props.name} id={props.id} placeholder={props.placeholder} className={props.className} ref={ref} value={textValue} onChange={e => setTextValue(e.target.value)} style={{resize:"none"}} required={props.required} />
     )
 });
 

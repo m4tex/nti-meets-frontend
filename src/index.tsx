@@ -5,15 +5,15 @@ import App from './App';
 import {BrowserRouter} from 'react-router-dom'
 import GlobalContextProvider from "./store/GlobalContextProvider";
 import ArticlePreviewContextProvider from "./store/ArticlePreviewContextProvider";
-import ArticleContextProvider from "./store/ArticleContextProvider";
+import ArticleContextRenderer from "./store/ArticleContextRenderer";
 
 ReactDOM.render(
     <BrowserRouter>
         <GlobalContextProvider>
             <ArticlePreviewContextProvider>
-                <ArticleContextProvider>
+                <ArticleContextRenderer>
                     <App/>
-                </ArticleContextProvider>
+                </ArticleContextRenderer>
             </ArticlePreviewContextProvider>
         </GlobalContextProvider>
     </BrowserRouter>,

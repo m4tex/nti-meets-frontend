@@ -18,7 +18,7 @@ function Layout(){
                 <Outlet />
             </main>
             <footer className={classes.footer}>
-                Made by m4tex.
+                Made by m4tex. (super cool footer omg)
             </footer>
         </>
     )

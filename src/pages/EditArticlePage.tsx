@@ -75,7 +75,7 @@ const StyledCard = styled(Card)`
   }
 `
 
-function CreateArticlePage() {
+function EditArticlePage() {
     const globalCtx = useContext(GlobalContext);
     const articleCtx = useContext(ArticleContext);
     const [contentType, setContentType] = useState<boolean>(false);
@@ -86,6 +86,7 @@ function CreateArticlePage() {
     const previewCtx = useContext(ArticlePreviewContext);
     const nav = useNavigate();
     const [searchParams] = useSearchParams();
+    const id = searchParams.get('id');
 
     useEffect(() => {
         const unloadCallback = (event:BeforeUnloadEvent) => {
@@ -98,16 +99,6 @@ function CreateArticlePage() {
         return () => window.removeEventListener("beforeunload", unloadCallback);
     }, []);
 
-    useEffect(() => {
-        if (searchParams.has('bfp')){
-            tref.current!.value = previewCtx.articlePreviewData.title;
-            dref.current!.value = previewCtx.articlePreviewData.date.toString();
-            cref.current!.value = previewCtx.articlePreviewData.content;
-
-            setContentType(previewCtx.articlePreviewData.html);
-        }
-    }, [searchParams])
-
     function previewArticleHandler() {
         previewCtx.setArticlePreviewData({
             html:contentType,
@@ -119,10 +110,10 @@ function CreateArticlePage() {
         nav('/artikel?prev');
     }
 
-    function createArticleHandler(event: FormEvent){
+    function editArticleHandler(event: FormEvent){
         event.preventDefault();
 
-        axios.post('http://localhost:8000/api/v1/articles', {
+        axios.patch('http://localhost:8000/api/v1/articles/' + id, {
             "html" : contentType,
             "title" : tref.current!.value,
             "date" : dref.current!.value,
@@ -133,9 +124,25 @@ function CreateArticlePage() {
         });
     }
 
+    //Get the article data
+    useEffect(() => {
+        if (!searchParams.has('id')){
+            nav('flode');
+            return;
+        }
+
+        axios.get('http://localhost:8000/api/v1/articles/'+ id, { withCredentials: true }).then(res => {
+            tref.current!.value = res.data.article.title;
+            dref.current!.value = res.data.article.date;
+            cref.current!.value = res.data.article.content;
+            setContentType(res.data.article.html);
+        }).catch(err => console.log(err));
+    }, [searchParams]);
+
+
     return  (
-        <StyledCard as={'form'} onSubmit={createArticleHandler} >
-            <h2>Skapa ett Möte</h2>
+        <StyledCard as={'form'} onSubmit={editArticleHandler} >
+            <h2>Redigera ett Möte</h2>
             <InputField placeholder={'Titel (inkludera ej i Artikeln, även i HTML)'} name={'title'} maxLength={28} ref={tref} required />
             <div>
                 <label htmlFor="start-date">Påbörjelsedatum</label>
@@ -149,14 +156,14 @@ function CreateArticlePage() {
             <TextAreaAutosized id={'content'} name={'article-content'} placeholder={'Skriv artikeln här...'} className={'textarea'} ref={cref} required />
             <div className={'button-row'}>
                 <Button type={'button'} onClick={previewArticleHandler}>
-                    Förhandsvisning
+                    Förhandsvisning (pre-alpha lol)
                 </Button>
                 <Button>
-                    Skapa Möte
+                    Redigera
                 </Button>
             </div>
         </StyledCard>
     )
 }
 
-export default CreateArticlePage;
+export default EditArticlePage;

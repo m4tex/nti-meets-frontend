@@ -2,9 +2,10 @@ import styled from 'styled-components';
 import Card from '../UI/Card';
 import DateDisplay from "../UI/DateDisplay";
 import {useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import Modal from "../UI/Modal";
+import {ArticleContext} from "../../store/ArticleContextProvider";
 
 const StyledDiv = styled(Card)`
   display: flex;
@@ -93,6 +94,7 @@ export interface MeetData {
 }
 
 function MeetItem(props: MeetData) {
+    const articleCtx = useContext(ArticleContext);
     const nav = useNavigate();
     const [authorUsername, setAuthorUsername] = useState<string>('');
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -100,15 +102,19 @@ function MeetItem(props: MeetData) {
     useEffect(() => {
         axios.get('http://localhost:8000/api/v1/user/' + props.author, { withCredentials: true })
             .then(res => setAuthorUsername(res.data.username)).catch(err => console.log(err));
-    }, [])
+    }, []);
 
     function titleClickHandler(){
-        nav('/artikel?id=' + props.id)
+        nav('/artikel?id=' + props.id);
     }
 
     function deleteMeetHandler() {
         axios.delete('http://localhost:8000/api/v1/articles/' + props.id, { withCredentials:true }).
-        then(() => setShowModal(false)).catch(err => console.log(err));
+        then(() => {
+            setShowModal(false);
+            articleCtx.refresh();
+        }).
+        catch(err => console.log(err));
     }
 
     return (
@@ -116,7 +122,9 @@ function MeetItem(props: MeetData) {
             { showModal &&
                 <Modal dialog={'Är du säker att du vill ta bort detta möte?'}
                        buttonData={ [{ name: 'Ja', event: deleteMeetHandler },
-                           { name: 'Nej', event: () => setShowModal(false) }] } />
+                           { name: 'Nej', event: () => setShowModal(false) }] }
+                       onBGClick={() => setShowModal(false)}
+                />
             }
             <div className={'main-content'}>
                 <div className={'title-row'}>
@@ -125,7 +133,7 @@ function MeetItem(props: MeetData) {
                     { props.admin &&
                         <div className={'admin-buttons'}>
                             <button onClick={() => setShowModal(true)}>Ta bort</button>
-                            <button>Redigera</button>
+                            <button onClick={() => nav('/redigera-mote?id=' + props.id )}>Redigera</button>
                         </div>
                     }
                 </div>

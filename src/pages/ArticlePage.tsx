@@ -110,6 +110,7 @@ function ArticlePage() {
         nav('/skapa-mote?bfp');
     }
 
+    //Shows a prompt on refresh
     useEffect(() => {
         const unloadCallback = (event:BeforeUnloadEvent) => {
             event.preventDefault();
@@ -154,7 +155,7 @@ function ArticlePage() {
 
     function addFavoriteHandler() {
         if(globalCtx.favorites.includes(id)) {
-            //remove favorite
+            globalCtx.removeFavorite(id);
         }
         else {
             globalCtx.addFavorite(id);

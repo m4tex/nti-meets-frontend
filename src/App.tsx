@@ -10,6 +10,7 @@ import SignUpPage from "./pages/SignUpPage";
 import CreateArticlePage from "./pages/CreateArticlePage";
 import ArchivePage from "./pages/ArchivePage";
 import FavoritesPage from "./pages/FavoritesPage";
+import EditArticlePage from "./pages/EditArticlePage";
 
 function App() {
     let globalContext = useContext(GlobalContext);
@@ -22,7 +23,12 @@ function App() {
                     <Route path={'/flode'} element={<MeetsDisplayPage  />} />
                     <Route path={'/arkiv'} element={<ArchivePage />} />
                     <Route path={'/favoriter'} element={<FavoritesPage />} />
-                    {globalContext.isAdmin && <Route path={'/skapa-mote'} element={<CreateArticlePage />} />}
+                    {globalContext.isAdmin &&
+                        <>
+                            <Route path={'/skapa-mote'} element={<CreateArticlePage />} />
+                            <Route path={'/redigera-mote'} element={<EditArticlePage />} />
+                        </>
+                    }
                     <Route path={'/artikel'} element={<ArticlePage />} />
                 </>
             }

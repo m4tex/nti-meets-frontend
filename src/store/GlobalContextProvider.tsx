@@ -1,6 +1,5 @@
 import React, {ReactNode, useEffect} from 'react';
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 const ctxInit = {
@@ -20,13 +19,12 @@ export type GlobalContent = typeof ctxInit;
 export let GlobalContext = React.createContext<GlobalContent>(ctxInit);
 
 function GlobalContextProvider(props: {children:ReactNode}){
-    let nav = useNavigate();
-
     //Single Sign On re-logger
     useEffect(() => {
         axios.post('http://localhost:8000/api/v1/sso', null, { withCredentials: true }).then(res => {
             if (res.status === 201){
                 contextValue.logIn(res.data.admin, res.data.username, res.data.favorites);
+                console.log(res.data.favorites)
             }
             setContextValue(prevState => ({
                 ...prevState,
@@ -55,11 +53,17 @@ function GlobalContextProvider(props: {children:ReactNode}){
             }));
         },
         addFavorite: async (id:string) => {
-            console.log('adding favorite :333')
             await axios.post('http://localhost:8000/api/v1/favorites', {"favorite": id}, { withCredentials: true}).catch(err => console.log(err));
             setContextValue(prevState => ({
                 ...prevState,
                 favorites: [...prevState.favorites, id],
+            }));
+        },
+        removeFavorite: async (id:string) => {
+            await axios.delete('http://localhost:8000/api/v1/favorites/' + id, { withCredentials: true }).catch(err => console.log(err));
+            setContextValue(prevState => ({
+                ...prevState,
+                favorites: prevState.favorites.splice(prevState.favorites.indexOf(id), 1),
             }));
         }
     });

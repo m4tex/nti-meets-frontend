@@ -33,9 +33,16 @@ function FavoritesPage() {
     const [articles, setArticles] = useState<Article[]>([]);
 
     useEffect(() => {
+        let test = true;
         axios.get('http://localhost:8000/api/v1/favorites', {withCredentials: true}).then(res => {
-            setArticles(articleCtx.articles.filter(article => res.data.favorites.indexOf(article.id) !== -1));
+            if (test){
+                setArticles(articleCtx.articles.filter(article => res.data.favorites.indexOf(article.id) !== -1));
+            }
         }).catch(err => console.log(err));
+
+        return () => {
+            test = false;
+        }
     }, [articleCtx.articles]);
 
     return (

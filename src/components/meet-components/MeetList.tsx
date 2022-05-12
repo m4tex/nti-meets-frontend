@@ -3,6 +3,15 @@ import MeetItem from "./MeetItem";
 import {GlobalContext} from "../../store/GlobalContextProvider";
 import MeetsSearchBar from "./MeetsSearchBar";
 import MeetsFilter from "./MeetsFilter";
+import styled from "styled-components";
+
+const Msg = styled.p`
+  display: block;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 30px;
+  font-weight: bold;
+`;
 
 interface Article {
     id:string,
@@ -47,7 +56,7 @@ function MeetList(props: { data: Article[] }) {
         <>
             <MeetsSearchBar onSearch={e=>setSearchValue(e.target.value)} value={searchValue} />
             <MeetsFilter onFilter={e=>setFilter(e.target.value)} value={filter}/>
-            {filteredArticles.map(x => <MeetItem key={x.id} {...x} admin={isAdmin}/>)}
+            {filteredArticles.length ? filteredArticles.map(x => <MeetItem key={x.id} {...x} admin={isAdmin}/>) : <Msg>Inga resultat</Msg>}
         </>
     )
 }
