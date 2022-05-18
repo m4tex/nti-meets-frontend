@@ -61,6 +61,7 @@ function GlobalContextProvider(props: {children:ReactNode}){
         },
         removeFavorite: async (id:string) => {
             await axios.delete('http://localhost:8000/api/v1/favorites/' + id, { withCredentials: true }).catch(err => console.log(err));
+            console.log(contextValue.favorites.splice(contextValue.favorites.indexOf(id), 1));
             setContextValue(prevState => ({
                 ...prevState,
                 favorites: prevState.favorites.splice(prevState.favorites.indexOf(id), 1),

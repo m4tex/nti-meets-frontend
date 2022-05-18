@@ -138,7 +138,6 @@ function ArticlePage() {
         else {
             nav('/flode');
          }
-
     }, [searchParams]);
 
     useEffect(() => {
@@ -165,7 +164,7 @@ function ArticlePage() {
 
     return (
         <StyledCard as={'article'}>
-            { searchParams.has('prev') && <Button className={'back-btn'} onClick={backToPrevHandler}>Gå tillbaka</Button>}
+            { searchParams.has('prev') && <Button className={'back-btn'} onClick={backToPrevHandler}>Gå tillbaka</Button> }
             <span className={'material-icons'} onClick={optListHandler}>
                 expand_more
             </span>

@@ -135,6 +135,7 @@ function EditArticlePage() {
             tref.current!.value = res.data.article.title;
             dref.current!.value = res.data.article.date;
             cref.current!.value = res.data.article.content;
+            console.log(res.data.article.content);
             setContentType(res.data.article.html);
         }).catch(err => console.log(err));
     }, [searchParams]);

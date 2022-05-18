@@ -17,8 +17,7 @@ interface ArticleCtx {
 
 const initState = {
     articles: [] as Article[],
-    refresh: () => {
-    },
+    refresh: () => {},
 }
 
 export const ArticleContext = React.createContext(initState);
@@ -33,23 +32,14 @@ function ArticleContextProvider(props: { children: ReactNode }) {
                 articles: res.data.articles,
                 refresh: fetchArticles
             });
-            console.log(globalCtx.favorites)
-            globalCtx.favorites.forEach((id) => {
-                console.log('iteration')
-               if (!res.data.articles.includes(id)) {
-                   globalCtx.removeFavorite(id);
-               }
-            });
-            // res.data.articles.forEach((article:Article) => {
-            //     if(!globalCtx.favorites.includes(article.id)){
-            //         globalCtx.removeFavorite(article.id);
-            //     }
-            // });
+            if (globalCtx.favorites) {
+                globalCtx.favorites.forEach((id) => {
+                    if (!res.data.articles.includes(id)) {
+                        globalCtx.removeFavorite(id);
+                    }
+                });
+            }
         }).catch(err => console.log(err));
-        // globalCtx.favorites.filter(id => artCtx.articles.map(art => art.id).indexOf(id) === -1).forEach((artId) => {
-        //     globalCtx.removeFavorite(artId);
-        //     console.log('yes.');
-        // });
     }
 
     useEffect(() => {
