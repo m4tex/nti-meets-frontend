@@ -27,7 +27,6 @@ function HeaderNavigation() {
                     <p onClick={() => nav('/arkiv')}>Arkiv</p>
                     <p onClick={() => nav('/favoriter')}>
                         <FavoritesBadge>{globalCtx.favorites ? globalCtx.favorites.length : 0}</FavoritesBadge>
-                        { console.log(globalCtx.favorites) }
                         Favoriter
                     </p>
                 </>

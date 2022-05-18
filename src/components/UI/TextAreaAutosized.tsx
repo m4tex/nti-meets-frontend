@@ -1,4 +1,4 @@
-import React, {ForwardedRef, MutableRefObject, useEffect, useState} from "react";
+import React, {ForwardedRef, MutableRefObject, useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 
 const StyledTA = styled.textarea`
@@ -7,25 +7,22 @@ const StyledTA = styled.textarea`
   padding: 8px;
 `
 
-const TextAreaAutosized = React.forwardRef<HTMLTextAreaElement, {name:string, id?:string, placeholder?:string, className?:string, required?:boolean, value?:string, onChange?:(val:string)=>void}>(function(props, ref) {
+function TextAreaAutosized(props: { name: string, id?: string, placeholder?: string, className?: string, required?: boolean, value?: string, onChange?: (val: string) => void }) {
     const [textValue, setTextValue] = useState<string>('');
-
+    const iref = useRef<HTMLTextAreaElement>(null);
     //I love typescript (no) (took 45 minutes of my life)
-    function isRef(ref: ForwardedRef<HTMLTextAreaElement>) : ref is MutableRefObject<HTMLTextAreaElement> {
-        return (ref as MutableRefObject<HTMLTextAreaElement>).current !== undefined;
-    }
 
     useEffect(() => {
-        if (ref && isRef(ref)) {
-            ref.current!.style.height = 'inherit';
-            ref.current!.style.height = `${ref.current!.scrollHeight}px`;
-        }
-    }, [textValue]);
+        iref.current!.style.height = 'inherit';
+        iref.current!.style.height = `${iref.current!.scrollHeight}px`;
+    }, [props.value]);
 
     return (
-        <StyledTA name={props.name} id={props.id} placeholder={props.placeholder} className={props.className} ref={ref} value={props.value === undefined ? textValue : props.value}
-                  onChange={props.value === undefined ? e => setTextValue(e.target.value) : e => (props.onChange as (val:string) => void)(e.target.value) } style={{resize:"none"}} required={props.required} />
+        <StyledTA name={props.name} id={props.id} placeholder={props.placeholder} className={props.className} ref={iref}
+                  value={props.value === undefined ? textValue : props.value}
+                  onChange={props.value === undefined ? e => setTextValue(e.target.value) : e => (props.onChange as (val: string) => void)(e.target.value)}
+                  style={{resize: "none"}} required={props.required}/>
     )
-});
+}
 
 export default TextAreaAutosized;

@@ -76,6 +76,7 @@ const StyledCard = styled(Card)`
 `
 
 function EditArticlePage() {
+    const previewCtx = useContext(ArticlePreviewContext);
     const globalCtx = useContext(GlobalContext);
     const articleCtx = useContext(ArticleContext);
     const [contentType, setContentType] = useState<boolean>(false);
@@ -83,7 +84,6 @@ function EditArticlePage() {
     const dref = useRef<HTMLInputElement>(null);
     const [content, setContent] = useState<string>('');
 
-    const previewCtx = useContext(ArticlePreviewContext);
     const nav = useNavigate();
     const [searchParams] = useSearchParams();
     const id = searchParams.get('id');
@@ -106,8 +106,9 @@ function EditArticlePage() {
             author: globalCtx.username,
             date: dref.current!.value,
             content: content,
+            id: searchParams.get('id'),
         })
-        nav('/artikel?prev');
+        nav('/artikel?prev=e');
     }
 
     function editArticleHandler(event: FormEvent){
@@ -131,10 +132,17 @@ function EditArticlePage() {
             return;
         }
 
+        if (searchParams.has('bfp')){
+            tref.current!.value = previewCtx.articlePreviewData.title;
+            dref.current!.value = previewCtx.articlePreviewData.date;
+            setContent(previewCtx.articlePreviewData.content);
+            setContentType(previewCtx.articlePreviewData.html);
+            return;
+        }
+
         axios.get('http://localhost:8000/api/v1/articles/'+ id, { withCredentials: true }).then(res => {
             tref.current!.value = res.data.article.title;
             dref.current!.value = res.data.article.date;
-            console.log(res.data.article.content);
             setContent(res.data.article.content);
             setContentType(res.data.article.html);
         }).catch(err => console.log(err));
@@ -157,7 +165,7 @@ function EditArticlePage() {
             <TextAreaAutosized id={'content'} name={'article-content'} placeholder={'Skriv artikeln här...'} className={'textarea'} value={content} onChange={val => setContent(val)} required />
             <div className={'button-row'}>
                 <Button type={'button'} onClick={previewArticleHandler}>
-                    Förhandsvisning (pre-alpha lol)
+                    Förhandsvisning
                 </Button>
                 <Button>
                     Redigera

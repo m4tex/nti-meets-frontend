@@ -107,7 +107,12 @@ function ArticlePage() {
     }
 
     function backToPrevHandler() {
-        nav('/skapa-mote?bfp');
+        if(searchParams.get('prev') === 'c'){
+            nav( '/skapa-mote?bfp');
+        }
+        else if(searchParams.get('prev') === 'e'){
+            nav('/redigera-mote?bfp&id=' + artPreviewCtx.articlePreviewData.id);
+        }
     }
 
     //Shows a prompt on refresh

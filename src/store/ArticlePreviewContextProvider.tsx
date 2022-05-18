@@ -8,9 +8,12 @@ const ctxInit = {
         title:"",
         date: "",
         content:"",
+        id: "none",
     },
-    setArticlePreviewData: (data: Article) => {},
+    setArticlePreviewData: (data: any) => {},
 }
+
+type ArticlePreviewData = typeof ctxInit.articlePreviewData;
 
 type ArticlePreviewContextData = typeof ctxInit;
 
@@ -19,13 +22,11 @@ export const ArticlePreviewContext = React.createContext(ctxInit)
 function ArticlePreviewContextProvider(props: { children: ReactNode }) {
     const [ctxData, setCtxData] = useState<ArticlePreviewContextData>({
         ...ctxInit,
-        setArticlePreviewData: (data: Article ) => {
-            console.log(data);
+        setArticlePreviewData: (data: ArticlePreviewData) =>
             setCtxData(prevState => ({
                 ...prevState,
                 articlePreviewData: data
-            }))
-        },
+            })),
     })
 
     return (
