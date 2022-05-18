@@ -81,7 +81,7 @@ function EditArticlePage() {
     const [contentType, setContentType] = useState<boolean>(false);
     const tref = useRef<HTMLInputElement>(null);
     const dref = useRef<HTMLInputElement>(null);
-    const cref = useRef<HTMLTextAreaElement>(null);
+    const [content, setContent] = useState<string>('');
 
     const previewCtx = useContext(ArticlePreviewContext);
     const nav = useNavigate();
@@ -105,7 +105,7 @@ function EditArticlePage() {
             title: tref.current!.value,
             author: globalCtx.username,
             date: dref.current!.value,
-            content: cref.current!.value,
+            content: content,
         })
         nav('/artikel?prev');
     }
@@ -117,7 +117,7 @@ function EditArticlePage() {
             "html" : contentType,
             "title" : tref.current!.value,
             "date" : dref.current!.value,
-            "content" : cref.current!.value,
+            "content" : content,
         }, { withCredentials: true }).then(() => {
             articleCtx.refresh();
             nav('/flode');
@@ -134,8 +134,8 @@ function EditArticlePage() {
         axios.get('http://localhost:8000/api/v1/articles/'+ id, { withCredentials: true }).then(res => {
             tref.current!.value = res.data.article.title;
             dref.current!.value = res.data.article.date;
-            cref.current!.value = res.data.article.content;
             console.log(res.data.article.content);
+            setContent(res.data.article.content);
             setContentType(res.data.article.html);
         }).catch(err => console.log(err));
     }, [searchParams]);
@@ -154,7 +154,7 @@ function EditArticlePage() {
                 <Switch option1={'Text'} option2={'HTML'} onChange={val => setContentType(val)} value={contentType} />
             </div>
             { contentType && <div className={'warning'}>Varning, HTML attributer fungerar inte pga. att det går inte att skilja inmatade strängar från riktig kod. 'class' är den enda undantaget.</div> }
-            <TextAreaAutosized id={'content'} name={'article-content'} placeholder={'Skriv artikeln här...'} className={'textarea'} ref={cref} required />
+            <TextAreaAutosized id={'content'} name={'article-content'} placeholder={'Skriv artikeln här...'} className={'textarea'} value={content} onChange={val => setContent(val)} required />
             <div className={'button-row'}>
                 <Button type={'button'} onClick={previewArticleHandler}>
                     Förhandsvisning (pre-alpha lol)
